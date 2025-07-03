@@ -1,6 +1,12 @@
 from flask import Flask, render_template, request, redirect, flash
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import io
+import os
+from flask import send_file
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.secret_key = "clave-super-secreta"
@@ -58,15 +64,30 @@ def consultas():
         est["_id"] = str(est["_id"])
         estudiantes_lista.append(est)
 
-    total = len(estudiantes_lista)
+    total = estudiantes.count_documents({})
     parroquias = estudiantes.distinct("parroquia")
+
+    # Conteo por sacramento
+    sacramento_count = estudiantes.aggregate([
+        {"$group": {"_id": "$sacramento", "cantidad": {"$sum": 1}}}
+    ])
+    sacramento_stats = {item["_id"]: item["cantidad"] for item in sacramento_count if item["_id"]}
+
+    # Conteo por parroquia
+    parroquia_count = estudiantes.aggregate([
+        {"$group": {"_id": "$parroquia", "cantidad": {"$sum": 1}}}
+    ])
+    parroquia_stats = {item["_id"]: item["cantidad"] for item in parroquia_count if item["_id"]}
 
     return render_template("consultas.html",
                            estudiantes=estudiantes_lista,
                            total=total,
                            parroquias=parroquias,
                            sacramento_filtro=sacramento_filtro,
-                           parroquia_filtro=parroquia_filtro)
+                           parroquia_filtro=parroquia_filtro,
+                           sacramento_stats=sacramento_stats,
+                           parroquia_stats=parroquia_stats)
+
 
 
 
@@ -99,6 +120,64 @@ def editar(id):
 
     est["_id"] = str(est["_id"])  # Convertir para usar en HTML
     return render_template("editar.html", estudiante=est)
+
+@app.route("/ficha/<id>")
+def ficha(id):
+    estudiante = estudiantes.find_one({"_id": ObjectId(id)})
+    if estudiante:
+        estudiante["_id"] = str(estudiante["_id"])
+        return render_template("ficha.html", est=estudiante)
+    else:
+        return "Estudiante no encontrado", 404
+
+@app.route("/ficha_pdf/<id>")
+def ficha_pdf(id):
+    estudiante = estudiantes.find_one({"_id": ObjectId(id)})
+    if not estudiante:
+        return "Estudiante no encontrado", 404
+
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    # Logo
+    logo_path = os.path.abspath(os.path.join("static", "logo.png"))
+
+    if os.path.exists(logo_path):
+        c.drawImage(logo_path, 50, height - 120, width=120, preserveAspectRatio=True)
+
+    # Título
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(200, height - 80, "Ficha del Catequizado")
+
+    # Datos del estudiante
+    c.setFont("Helvetica", 12)
+    y = height - 150
+    c.drawString(50, y, f"Nombre: {estudiante.get('nombre', '')}")
+    y -= 20
+    c.drawString(50, y, f"Fecha de nacimiento: {estudiante.get('fecha_nacimiento', '')}")
+    y -= 20
+    c.drawString(50, y, f"Dirección: {estudiante.get('direccion', '')}")
+    y -= 20
+    c.drawString(50, y, f"Teléfono: {estudiante.get('telefono', '')}")
+    y -= 20
+    c.drawString(50, y, f"Parroquia: {estudiante.get('parroquia', '')}")
+    y -= 20
+    c.drawString(50, y, f"Sacramento: {estudiante.get('sacramento', '')}")
+
+    # Espacio para firma
+    y -= 60
+    c.line(50, y, 250, y)
+    c.drawString(50, y - 15, "Firma del Catequista")
+
+    # Guardar y devolver
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+
+    return send_file(buffer, as_attachment=True,
+                     download_name=f"ficha_{estudiante['nombre'].replace(' ', '_')}.pdf",
+                     mimetype='application/pdf')
 
 
 if __name__ == "__main__":

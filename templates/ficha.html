@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Ficha de Catequizando{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-person-badge"></i> Ficha del Catequizando</h3>
+
+  <dl class="row">
+    <dt class="col-sm-4">Nombre completo:</dt>
+    <dd class="col-sm-8">{{ est.nombre }}</dd>
+
+    <dt class="col-sm-4">Fecha de nacimiento:</dt>
+    <dd class="col-sm-8">{{ est.fecha_nacimiento }}</dd>
+
+    <dt class="col-sm-4">Dirección:</dt>
+    <dd class="col-sm-8">{{ est.direccion }}</dd>
+
+    <dt class="col-sm-4">Teléfono:</dt>
+    <dd class="col-sm-8">{{ est.telefono }}</dd>
+
+    <dt class="col-sm-4">Parroquia:</dt>
+    <dd class="col-sm-8">{{ est.parroquia }}</dd>
+
+    <dt class="col-sm-4">Sacramento aprobado:</dt>
+    <dd class="col-sm-8">{{ est.sacramento }}</dd>
+  </dl>
+
+  <a href="/consultas" class="btn btn-secondary">
+    <i class="bi bi-arrow-left-circle"></i> Volver
+  </a>
+  <a href="/ficha_pdf/{{ est._id }}" class="btn btn-danger">
+    <i class="bi bi-file-earmark-pdf-fill"></i> Descargar PDF
+  </a>
+
+</div>
+{% endblock %}

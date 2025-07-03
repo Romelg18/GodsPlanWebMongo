@@ -6,6 +6,32 @@
   <h3 class="mb-4"><i class="bi bi-card-list"></i> Lista de Catequizados Registrados</h3>
 
   <p><strong>Total registrados:</strong> {{ total }}</p>
+  <div class="row mb-4">
+  <div class="col-md-6">
+    <h5><i class="bi bi-bookmark-check"></i> Total por Sacramento:</h5>
+    <ul class="list-group">
+      {% for sacramento, cantidad in sacramento_stats.items() %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ sacramento }}
+          <span class="badge bg-primary rounded-pill">{{ cantidad }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-6">
+    <h5><i class="bi bi-geo-alt"></i> Total por Parroquia:</h5>
+    <ul class="list-group">
+      {% for parroquia, cantidad in parroquia_stats.items() %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ parroquia }}
+          <span class="badge bg-success rounded-pill">{{ cantidad }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
 
   <p><strong>Parroquias:</strong>
     {% for p in parroquias %}
@@ -13,36 +39,31 @@
     {% endfor %}
   </p>
 
-
-
   <form method="get" class="row g-3 mb-4">
-  <div class="col-md-6">
-    <label for="sacramento" class="form-label">Filtrar por sacramento aprobado:</label>
-    <input type="text" name="sacramento" id="sacramento" value="{{ sacramento_filtro or '' }}" class="form-control">
-  </div>
-  <div class="col-md-6">
-    <label for="parroquia" class="form-label">Filtrar por parroquia:</label>
-    <select name="parroquia" id="parroquia" class="form-select">
-      <option value="">-- Todas --</option>
-      {% for p in parroquias %}
-      <option value="{{ p }}" {% if parroquia_filtro == p %}selected{% endif %}>{{ p }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="col-md-12 d-flex justify-content-start">
-    <button type="submit" class="btn btn-primary me-2">
-      <i class="bi bi-search"></i> Buscar
-    </button>
-    {% if sacramento_filtro or parroquia_filtro %}
-    <a href="/consultas" class="btn btn-outline-secondary">
-      <i class="bi bi-x-circle"></i> Quitar filtros
-    </a>
-    {% endif %}
-  </div>
+    <div class="col-md-6">
+      <label for="sacramento" class="form-label">Filtrar por sacramento aprobado:</label>
+      <input type="text" name="sacramento" id="sacramento" value="{{ sacramento_filtro or '' }}" class="form-control">
+    </div>
+    <div class="col-md-6">
+      <label for="parroquia" class="form-label">Filtrar por parroquia:</label>
+      <select name="parroquia" id="parroquia" class="form-select">
+        <option value="">-- Todas --</option>
+        {% for p in parroquias %}
+        <option value="{{ p }}" {% if parroquia_filtro == p %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-12 d-flex justify-content-start">
+      <button type="submit" class="btn btn-primary me-2">
+        <i class="bi bi-search"></i> Buscar
+      </button>
+      {% if sacramento_filtro or parroquia_filtro %}
+      <a href="/consultas" class="btn btn-outline-secondary">
+        <i class="bi bi-x-circle"></i> Quitar filtros
+      </a>
+      {% endif %}
+    </div>
   </form>
-
-  
-  
 
   <table class="table table-bordered table-striped table-hover">
     <thead class="table-dark">
@@ -68,9 +89,14 @@
         <td>{{ est.parroquia }}</td>
         <td>{{ est.sacramento }}</td>
         <td>
-          <a href="/editar/{{ est._id }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
+          <a href="/ficha/{{ est._id }}" class="btn btn-info btn-sm" title="Ver ficha">
+            <i class="bi bi-file-person"></i>
+          </a>
+          <a href="/editar/{{ est._id }}" class="btn btn-warning btn-sm" title="Editar">
+            <i class="bi bi-pencil-square"></i>
+          </a>
           {% if est._id %}
-          <a href="/eliminar/{{ est._id }}" class="btn btn-danger btn-sm"
+          <a href="/eliminar/{{ est._id }}" class="btn btn-danger btn-sm" title="Eliminar"
              onclick="return confirm('¿Estás seguro de eliminar este registro?')">
             <i class="bi bi-trash"></i>
           </a>
