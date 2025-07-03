@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Lista de Catequistas{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-person-lines-fill"></i> Catequistas Registrados</h3>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Parroquia</th>
+        <th>Asistencias</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in catequistas %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ c.nombre if c.nombre else "No asignado" }}</td>
+        <td>{{ c.parroquia_nombre }}</td>
+        <td>
+  {% if c.asistencias %}
+    <ul class="mb-0">
+      {% for a in c.asistencias %}
+        <li>
+          {{ a.fecha }} - Est. #{{ a.estudiante_id }} -
+          {% if a.asistio %}
+            <span class="text-success">Asistió</span>
+          {% else %}
+            <span class="text-danger">Faltó</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <em>Sin asistencias</em>
+  {% endif %}
+</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

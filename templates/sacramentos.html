@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Lista de Sacramentos{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-cross"></i> Sacramentos Registrados</h3>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Fecha de Sacramento</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sacramentos %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ s.nombre }}</td>
+        <td>{{ s.fecha_sacramento }}</td>
+        <td>{{ s.descripcion if s.descripcion else "Sin descripción" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

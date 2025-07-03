@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Niveles de Catequesis{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-layers"></i> Niveles de Catequesis</h3>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for n in niveles %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ n.nombre }}</td>
+        <td>{{ n.descripcion }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

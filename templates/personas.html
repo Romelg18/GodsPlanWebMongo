@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Lista de Personas{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-people-fill"></i> Lista de Personas Registradas</h3>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Tipo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in personas %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ p.cedula }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.fecha_nacimiento }}</td>
+        <td>{{ p.direccion }}</td>
+        <td>{{ p.telefono }}</td>
+        <td>{{ p.tipo }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

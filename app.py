@@ -16,6 +16,13 @@ app.secret_key = "clave-super-secreta"
 client = MongoClient("mongodb://localhost:27017/")
 db = client["GodsPlanDB"]
 estudiantes = db["Estudiantes"]
+catequistas = db["Catequistas"]
+libros = db["Libros"]
+nivelcatequesis = db["NivelCatequesis"]
+parroquias = db["Parroquias"]
+personas = db["Personas"]
+sacramentos = db["Sacramentos"]
+
 
 @app.route("/")
 def index():
@@ -178,7 +185,64 @@ def ficha_pdf(id):
     return send_file(buffer, as_attachment=True,
                      download_name=f"ficha_{estudiante['nombre'].replace(' ', '_')}.pdf",
                      mimetype='application/pdf')
+    
+    
+@app.route("/catequistas")
+def ver_catequistas():
+    lista_catequistas = list(catequistas.find())
+    
+    for cat in lista_catequistas:
+        persona_id = cat.get("persona_id")
+        if persona_id:
+            persona = personas.find_one({"_id": persona_id})
+            cat["nombre"] = persona.get("nombre", "Desconocido") if persona else "Desconocido"
+        else:
+            cat["nombre"] = "No asignado"
+        
+        # Por si el _id es ObjectId y lo necesitas como string para alguna funcionalidad
+        cat["_id"] = str(cat["_id"])
 
+    return render_template("catequistas.html", catequistas=lista_catequistas)
+
+
+
+@app.route("/parroquias")
+def ver_parroquias():
+    parroquias_lista = list(parroquias.find())
+    for p in parroquias_lista:
+        p["_id"] = str(p["_id"])
+    return render_template("parroquias.html", parroquias=parroquias_lista)
+
+
+
+
+@app.route("/niveles")
+def ver_niveles():
+    niveles = list(nivelcatequesis.find())
+    for n in niveles:
+        n["_id"] = str(n["_id"])
+    return render_template("niveles.html", niveles=niveles)
+
+
+@app.route("/sacramentos")
+def ver_sacramentos():
+    lista = list(sacramentos.find())
+    for s in lista:
+        s["_id"] = str(s["_id"])
+    return render_template("sacramentos.html", sacramentos=lista)
+
+@app.route("/personas")
+def ver_personas():
+    personas = list(db["Personas"].find())
+    for p in personas:
+        p["_id"] = str(p["_id"])  # Convertir ObjectId a string
+    return render_template("personas.html", personas=personas)
+
+
+@app.route("/libros")
+def libros_view():
+    libros = list(db["Libros"].find())
+    return render_template("libros.html", libros=libros)
 
 if __name__ == "__main__":
     app.run(debug=True)

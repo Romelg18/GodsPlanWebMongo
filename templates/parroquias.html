@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Listado de Parroquias{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Listado de Parroquias</h2>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Vicaría</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for parroquia in parroquias %}
+            <tr>
+                <td>{{ parroquia.nombre }}</td>
+                <td>{{ parroquia.direccion }}</td>
+                <td>{{ parroquia.vicaria }}</td>
+                <td>{{ parroquia.responsable }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
