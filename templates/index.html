@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="card p-5 text-center">
+  <h1 class="mb-4">
+    <i class="bi bi-journal-bookmark-fill"></i> Bienvenido a GodsPlan
+  </h1>
+  <p class="lead">
+    Esta plataforma te permite registrar y administrar estudiantes, catequistas, parroquias y temas de catequesis.
+  </p>
+  <div class="mt-4">
+    <a href="/registro" class="btn btn-success me-2">
+      <i class="bi bi-person-plus-fill"></i> Agregar Catequizado
+    </a>
+    <a href="/consultas" class="btn btn-primary">
+      <i class="bi bi-card-list"></i> Ver Catequizados
+    </a>
+  </div>
+</div>
+{% endblock %}

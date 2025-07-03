@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Editar Estudiante{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4"><i class="bi bi-pencil-square"></i> Editar Estudiante</h3>
+
+  <form method="post" class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nombre:</label>
+      <input type="text" name="nombre" class="form-control" value="{{ estudiante.nombre }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Fecha Nacimiento:</label>
+      <input type="date" name="fecha_nacimiento" class="form-control" value="{{ estudiante.fecha_nacimiento }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Dirección:</label>
+      <input type="text" name="direccion" class="form-control" value="{{ estudiante.direccion }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Teléfono:</label>
+      <input type="text" name="telefono" class="form-control" value="{{ estudiante.telefono }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Parroquia:</label>
+      <input type="text" name="parroquia" class="form-control" value="{{ estudiante.parroquia }}" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Sacramento:</label>
+      <input type="text" name="sacramento" class="form-control" value="{{ estudiante.sacramento }}" required>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Guardar Cambios</button>
+      <a href="/consultas" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
